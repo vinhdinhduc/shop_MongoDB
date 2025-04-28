@@ -28,11 +28,18 @@ const productSchema = new mongoose.Schema(
         stock: Number,
       },
     ],
+    deleted: { type: Boolean, default: false },
+    deletedAt: { type: Date, default: null },
   },
   {
     timestamps: true, // Tự động thêm createdAt và updatedAt
   }
 );
+productSchema.index({
+  title: "text",
+  category: "text",
+  brand: "text",
+});
 
 const Product = mongoose.model("Product", productSchema);
 module.exports = Product;
