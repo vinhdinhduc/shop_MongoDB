@@ -36,10 +36,11 @@ const upload = multer({
 // Lấy tất cả sản phẩm
 const getProducts = async (req, res) => {
   try {
-    const { search, category, brand, minPrice, maxPrice, color, size } =
+    const { search, category, brand, minPrice, maxPrice, color, size, sort } =
       req.query;
-    let query = {};
 
+    // Xây dựng bộ lọc
+    let query = {};
     if (search) {
       query.$text = { $search: search };
     }
@@ -63,12 +64,25 @@ const getProducts = async (req, res) => {
       };
     }
 
-    const products = await Product.find(query);
-    res.json(products);
+    // Xử lý sắp xếp
+    let sortOption = {};
+    if (sort === "priceAsc") {
+      sortOption = { pricing: 1 }; // Giá tăng dần
+    } else if (sort === "priceDesc") {
+      sortOption = { pricing: -1 }; // Giá giảm dần
+    } else {
+      sortOption = { createdAt: -1 }; // Mặc định: sản phẩm mới nhất
+    }
+
+    // Lấy sản phẩm từ MongoDB
+    const products = await Product.find(query).sort(sortOption);
+
+    // Trả về dữ liệu
+    res.status(200).json(products);
   } catch (error) {
-    console.error("Lỗi khi lấy sản phẩm:", error);
+    console.error("Lỗi khi lấy sản phẩm:", error.message);
     res.status(500).json({
-      message: "Lỗi server",
+      message: "Lỗi server khi lấy sản phẩm",
       error: error.message,
     });
   }
@@ -189,15 +203,21 @@ const updateProduct = async (req, res) => {
 // Xóa sản phẩm
 const deleteProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndDelete(req.params.id);
-    if (product) {
-      res.json({ message: "Xóa sản phẩm thành công" });
-    } else {
-      res.status(404).json({ message: "Không tìm thấy sản phẩm" });
+    const { id } = req.params;
+    const product = await Product.findByIdAndUpdate(
+      id,
+      { deleted: true },
+      { new: true }
+    );
+
+    if (!product) {
+      return res.status(404).json({ message: "Không tìm thấy sản phẩm" });
     }
+
+    res.status(200).json({ message: "Sản phẩm đã được chuyển vào thùng rác" });
   } catch (error) {
-    console.error("Lỗi khi xóa sản phẩm:", error);
-    res.status(400).json({ message: error.message });
+    console.error("Lỗi khi xóa sản phẩm:", error.message);
+    res.status(500).json({ message: "Lỗi server", error: error.message });
   }
 };
 // Xóa mềm nhiều sản phẩm
@@ -250,7 +270,9 @@ const emptyTrash = async (req, res) => {
     await Product.deleteMany({ deleted: true }); // Giả sử bạn có trường `deleted` để đánh dấu sản phẩm đã xóa
     res.status(200).json({ message: "Thùng rác đã được dọn sạch" });
   } catch (error) {
-    res.status(500).json({ message: "Lỗi khi dọn sạch thùng rác", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Lỗi khi dọn sạch thùng rác", error: error.message });
   }
 };
 

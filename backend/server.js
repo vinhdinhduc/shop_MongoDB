@@ -4,6 +4,7 @@ const path = require("path");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const productRoutes = require("./Routes/productRoutes.js");
+const categoryRoutes = require("./Routes/categoryRoutes.js");
 const cartRoutes = require("./Routes/cartRoutes.js");
 const orderRoutes = require("./Routes/orderRoutes.js");
 const authRoutes = require("./Routes/authRoutes.js");
@@ -25,6 +26,7 @@ app.use(
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/products", productRoutes);
+app.use("api/categories", categoryRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/auth", authRoutes);

@@ -32,7 +32,7 @@ const productSchema = new mongoose.Schema(
     deletedAt: { type: Date, default: null },
   },
   {
-    timestamps: true, // Tự động thêm createdAt và updatedAt
+    timestamps: true,
   }
 );
 productSchema.index({

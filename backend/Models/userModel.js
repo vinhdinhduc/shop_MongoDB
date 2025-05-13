@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // Tự động thêm createdAt và updatedAt
+    timestamps: true,
   }
 );
 module.exports = mongoose.model("User", userSchema);

@@ -53,14 +53,14 @@ const registerAdmin = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: "admin", // Gán vai trò admin
+      role: "admin", 
     });
 
     await newAdmin.save();
     res.status(201).json({
       message: "Tài khoản admin đã được tạo thành công",
       user: {
-        id: newAdmin._id,
+        _id: newAdmin._id,
         name: newAdmin.username,
         email: newAdmin.email,
         role: newAdmin.role,
@@ -85,7 +85,7 @@ const login = async (req, res) => {
 
     const token = jwt.sign(
       {
-        id: user._id,
+        _id: user._id,
         role: user.role, // Thêm role vào payload
       },
       process.env.JWT_SECRET,
@@ -96,7 +96,7 @@ const login = async (req, res) => {
       success: true,
       token,
       user: {
-        id: user._id,
+        _id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
