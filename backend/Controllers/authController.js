@@ -1,4 +1,5 @@
 const User = require("../Models/userModel");
+const Cart = require("../Models/cartModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -6,18 +7,18 @@ const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // Kiểm tra email tồn tại
+    //Check email
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email đã được đăng ký" });
     }
-
+    //Hassh password
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
       name,
       email,
       password: hashedPassword,
-      role: "customer", // Mặc định là customer
+      role: "customer",
     });
 
     await newUser.save();
@@ -39,7 +40,6 @@ const registerAdmin = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // Kiểm tra email đã tồn tại
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email đã được đăng ký" });
@@ -53,7 +53,7 @@ const registerAdmin = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: "admin", 
+      role: "admin",
     });
 
     await newAdmin.save();
@@ -86,10 +86,13 @@ const login = async (req, res) => {
     const token = jwt.sign(
       {
         _id: user._id,
-        role: user.role, // Thêm role vào payload
+        role: user.role,
       },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
+    );
+    const cart = await Cart.findOne({ userId: user._id }).populate(
+      "items.productId"
     );
 
     res.json({
@@ -101,8 +104,10 @@ const login = async (req, res) => {
         email: user.email,
         role: user.role,
       },
+      cart: cart || { items: [] },
     });
   } catch (err) {
+    console.error("Lỗi khi đăng nhập:", err);
     res.status(500).json({ message: "Lỗi server", error: err.message });
   }
 };

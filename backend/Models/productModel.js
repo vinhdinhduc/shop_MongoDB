@@ -2,8 +2,15 @@ const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema(
   {
-    sku: { type: String, required: true, unique: true },
-    title: { type: String, required: true },
+    sku: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
     description: String,
     manufacture_details: {
       model_number: String,
@@ -15,8 +22,14 @@ const productSchema = new mongoose.Schema(
       height: Number,
       depth: Number,
     },
-    quantity: { type: Number, default: 0 },
-    pricing: { type: Number, required: true },
+    quantity: {
+      type: Number,
+      default: 0,
+    },
+    pricing: {
+      type: Number,
+      required: true,
+    },
     images: [String],
     videos: [String],
     category: String,
@@ -28,8 +41,14 @@ const productSchema = new mongoose.Schema(
         stock: Number,
       },
     ],
-    deleted: { type: Boolean, default: false },
-    deletedAt: { type: Date, default: null },
+    deleted: {
+      type: Boolean,
+      default: false,
+    },
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,

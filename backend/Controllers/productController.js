@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
   },
 });
 
-// Bộ lọc file (chỉ chấp nhận ảnh và video)
+// Kiểm tra loại file
 const fileFilter = (req, file, cb) => {
   if (
     file.mimetype.startsWith("image/") ||
@@ -29,8 +29,8 @@ const upload = multer({
   storage,
   fileFilter,
 }).fields([
-  { name: "images", maxCount: 5 }, // Xử lý tối đa 5 file cho trường "images"
-  { name: "videos", maxCount: 2 }, // Xử lý tối đa 2 file cho trường "videos"
+  { name: "images", maxCount: 5 }, 
+  { name: "videos", maxCount: 2 }, 
 ]);
 
 // Lấy tất cả sản phẩm
@@ -67,17 +67,17 @@ const getProducts = async (req, res) => {
     // Xử lý sắp xếp
     let sortOption = {};
     if (sort === "priceAsc") {
-      sortOption = { pricing: 1 }; // Giá tăng dần
+      sortOption = { pricing: 1 };
     } else if (sort === "priceDesc") {
-      sortOption = { pricing: -1 }; // Giá giảm dần
+      sortOption = { pricing: -1 }; 
     } else {
-      sortOption = { createdAt: -1 }; // Mặc định: sản phẩm mới nhất
+      sortOption = { createdAt: -1 }; 
     }
 
     // Lấy sản phẩm từ MongoDB
     const products = await Product.find(query).sort(sortOption);
 
-    // Trả về dữ liệu
+    
     res.status(200).json(products);
   } catch (error) {
     console.error("Lỗi khi lấy sản phẩm:", error.message);
@@ -267,7 +267,7 @@ const getTrash = async (req, res) => {
 };
 const emptyTrash = async (req, res) => {
   try {
-    await Product.deleteMany({ deleted: true }); // Giả sử bạn có trường `deleted` để đánh dấu sản phẩm đã xóa
+    await Product.deleteMany({ deleted: true }); 
     res.status(200).json({ message: "Thùng rác đã được dọn sạch" });
   } catch (error) {
     res
