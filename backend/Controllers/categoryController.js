@@ -6,12 +6,10 @@ const getCategories = async (req, res) => {
     const categories = await Category.find();
     res.status(200).json(categories);
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Lỗi khi lấy danh sách danh mục",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Lỗi khi lấy danh sách danh mục",
+      error: error.message,
+    });
   }
 };
 
@@ -37,12 +35,10 @@ const createCategory = async (req, res) => {
   try {
     const newCategory = new Category({ name, description });
     await newCategory.save();
-    res
-      .status(201)
-      .json({
-        message: "Danh mục đã được tạo thành công",
-        category: newCategory,
-      });
+    res.status(201).json({
+      message: "Danh mục đã được tạo thành công",
+      category: newCategory,
+    });
   } catch (error) {
     res
       .status(500)

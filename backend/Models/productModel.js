@@ -13,10 +13,12 @@ const productSchema = new mongoose.Schema(
     },
     description: String,
     manufacture_details: {
-      model_number: String,
-      release_date: Date,
+      //tt sản xuất
+      model_number: String, // mã sản phẩm
+      release_date: Date, // ngày phát hành
     },
     shipping_details: {
+      // thông tin vận chuyển
       weight: Number,
       width: Number,
       height: Number,
@@ -32,13 +34,13 @@ const productSchema = new mongoose.Schema(
     },
     images: [String],
     videos: [String],
-    category: String,
-    brand: String,
+    category: String, // danh mục sản phẩm
+    brand: String, // thương hiệu
     attributes: [
       {
         color: String,
         size: String,
-        stock: Number,
+        stock: Number, // số lượng tồn kho
       },
     ],
     deleted: {

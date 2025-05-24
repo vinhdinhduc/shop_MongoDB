@@ -5,7 +5,6 @@ const getCart = async (req, res) => {
   try {
     const userId = req.params.userId || req.user._id;
 
-    // Log để debug
     console.log("Attempting to find cart for userId:", userId);
 
     if (!userId) {
@@ -80,7 +79,6 @@ const removeFromCart = async (req, res) => {
   res.json(cart);
 };
 
-// xóa all
 const clearCart = async (req, res) => {
   const { userId } = req.params;
   await Cart.findOneAndUpdate({ userId }, { items: [] });
